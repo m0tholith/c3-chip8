@@ -6,7 +6,7 @@ import std::time;
 
 bool shouldExit;
 
-char[] game = $embed("6-keypad.ch8");
+char[] game = $embed("br8kout.ch8");
 usz c;
 Time now @noinit;
 Time prev @noinit;
