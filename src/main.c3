@@ -15,6 +15,7 @@ fn int main(String[] args)
 	{
 		display::set_pixel(rand(64), rand(32), rnd() >= 0.5);
 		display::draw();
+		input::poll();
 		if (c % FRAME_CHECK == 0)
 		{
 			now = time::now();
