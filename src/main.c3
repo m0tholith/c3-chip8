@@ -4,25 +4,35 @@ import std::thread;
 import std::math::random;
 import std::time;
 
+bool shouldExit;
+
+char[] game = $embed("6-keypad.ch8");
 usz c;
 Time now @noinit;
 Time prev @noinit;
 const FRAME_CHECK = 60;
+const STEPS_PER_TICK = 12;
 fn int main(String[] args)
 {
+	memory::load_game(game);
 	prev = time::now();
-	while (c++ < FRAME_CHECK * 10)
+	while (!shouldExit)
 	{
-		display::set_pixel(rand(64), rand(32), rnd() >= 0.5);
-		display::draw();
 		input::poll();
-		if (c % FRAME_CHECK == 0)
+		for (usz i = 0; i < STEPS_PER_TICK; i++)
+		{
+			ushort opcode = ram[vPC + 1] | ((ushort)ram[vPC] << 8);
+			vPC += 2;
+			cpu::exec(opcode);
+		}
+		display::draw();
+		if (++c % FRAME_CHECK == 0)
 		{
 			now = time::now();
 			io::printn(1_000_000 / (double)(now - prev) * FRAME_CHECK);
 			prev = now;
 		}
-		thread::sleep_ms(16);
+		thread::sleep_ms(15);
 	}
 	return 0;
 }
