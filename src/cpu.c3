@@ -7,6 +7,7 @@ import chip8::memory;
 import chip8::input;
 import chip8::display;
 
+bool drawFlag;
 bool waitingForInput = false;
 char inputWaitingRegister;
 
@@ -23,10 +24,6 @@ fn void stop_wait(char key, bool keydown)
 }
 fn void exec(ushort opcode)
 {
-	// decrement timers
-	dT = (char)math::min(0, dT - 1);
-	sT = (char)math::min(0, sT - 1);
-
 	if (waitingForInput)
 	{
 		vPC -= 2;
@@ -43,6 +40,7 @@ fn void exec(ushort opcode)
 	{
 		case 0x00E0: // clear screen
 			display::clear();
+			drawFlag = true;
 			return;
 		case 0x00EE: // return from subroutine
 			memory::ret_subroutine();
@@ -209,10 +207,9 @@ fn void draw_sprite(char x, char y, char height)
 		{
 			if (x + i >= display::GAME_WIDTH) break;
 			bool pixelToSet = ram[vI + j] & (1 << (8 - i - 1)) > 0;
-			bool pixelOnDisplay = display::get_pixel(x + i, y + j);
-			display::set_pixel(x + i, y + j, pixelToSet ^ pixelOnDisplay);
-			pixelOnDisplay = display::get_pixel(x + i, y + j);
-			if (pixelToSet && !pixelOnDisplay) vReg[0xF] = 1;
+			bool pixelTurnedOff = display::toggle_pixel(x + i, y + j, pixelToSet);
+			if (pixelTurnedOff) vReg[0xF] = 1;
 		}
 	}
+	drawFlag = true;
 }

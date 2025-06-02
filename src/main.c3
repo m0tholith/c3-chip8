@@ -26,7 +26,13 @@ fn int main(String[] args)
 			vPC += 2;
 			cpu::exec(opcode);
 		}
-		display::draw();
+		dT = (char)math::min(0, dT - 1);
+		sT = (char)math::min(0, sT - 1);
+		if (cpu::drawFlag)
+		{
+			display::draw();
+			cpu::drawFlag = false;
+		}
 
 		now = time::now();
 		NanoDuration frame_time = ((NanoDuration)now - (NanoDuration)prev);
