@@ -10,7 +10,7 @@ char[] game = $embed("br8kout.ch8");
 usz c;
 Time now @noinit;
 Time prev @noinit;
-const STEPS_PER_TICK = 12;
+const STEPS_PER_TICK = 8;
 const NanoDuration TARGET_TIME = (NanoDuration)(1_000_000_000 / 60);
 
 fn int main(String[] args)
