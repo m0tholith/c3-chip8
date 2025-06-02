@@ -26,8 +26,8 @@ fn int main(String[] args)
 			vPC += 2;
 			cpu::exec(opcode);
 		}
-		dT = (char)math::min(0, dT - 1);
-		sT = (char)math::min(0, sT - 1);
+		dT = (char)math::max(0, (short)dT - 1);
+		sT = (char)math::max(0, (short)sT - 1);
 		if (cpu::drawFlag)
 		{
 			display::draw();
