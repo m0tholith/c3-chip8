@@ -33,6 +33,14 @@ fn int main(String[] args)
 			display::draw();
 			cpu::drawFlag = false;
 		}
+		if (sT > 0)
+		{
+			sound::play_audio();
+		}
+		else
+		{
+			sound::pause();
+		}
 
 		now = time::now();
 		NanoDuration frame_time = ((NanoDuration)now - (NanoDuration)prev);
