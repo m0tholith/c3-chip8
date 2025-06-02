@@ -10,8 +10,9 @@ char[] game = $embed("br8kout.ch8");
 usz c;
 Time now @noinit;
 Time prev @noinit;
-const FRAME_CHECK = 60;
 const STEPS_PER_TICK = 12;
+const NanoDuration TARGET_TIME = (NanoDuration)(1_000_000_000 / 60);
+
 fn int main(String[] args)
 {
 	memory::load_game(game);
@@ -26,13 +27,14 @@ fn int main(String[] args)
 			cpu::exec(opcode);
 		}
 		display::draw();
-		if (++c % FRAME_CHECK == 0)
+
+		now = time::now();
+		NanoDuration frame_time = ((NanoDuration)now - (NanoDuration)prev);
+		if (frame_time < TARGET_TIME)
 		{
-			now = time::now();
-			io::printn(1_000_000 / (double)(now - prev) * FRAME_CHECK);
-			prev = now;
+			thread::sleep_ns((TARGET_TIME - frame_time) * 5 / 6);
 		}
-		thread::sleep_ms(15);
+		prev = now;
 	}
 	return 0;
 }
